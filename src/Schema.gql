@@ -1,0 +1,68 @@
+type Query {
+  users(where: WhereArg): [User]!
+}
+
+query GetUsers($where: WhereArg) {
+  users(where: $where) {
+    firstName
+    birthDate
+  }
+}
+
+scalar Date
+
+type User {
+  id: String!
+  gender: Gender!
+  firstName: String!
+  middleName: String
+  lastName: String!
+  birthDate: Date!
+  registered: Date!
+  children: [User!]!
+  mother: User
+  father: User
+  spouse: User
+}
+
+enum Gender {
+  Male
+  Female
+}
+
+input WhereArg {
+  gender: Gender
+  firstName: StringFilter
+  middleName: StringFilter
+  lastName: StringFilter
+  birthDate: DateFilter
+  registered: DateFilter
+
+  NOT: WhereArg
+  AND: [WhereArg!]
+  OR: [WhereArg!]
+}
+
+input DateFilter {
+  operator: DateFilterOperator!
+  operand: Date!
+}
+
+enum DateFilterOperator {
+  GT
+  GTE
+  LT
+  LTE
+}
+
+input StringFilter {
+  operator: StringFilterOperator!
+  operands: [String!]!
+}
+
+enum StringFilterOperator {
+  Equals
+  StartsWith
+  EndsWith
+  Contains
+}
